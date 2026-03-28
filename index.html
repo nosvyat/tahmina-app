@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta
+    name="description"
+    content="Персональное birthday mini app для Тахмины"
+  />
+  <title>Что тебя радует? — Tahmina Mini App</title>
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Фоновые декоративные слои -->
+  <div class="bg-layer bg-layer--1"></div>
+  <div class="bg-layer bg-layer--2"></div>
+  <div class="bg-layer bg-layer--3"></div>
+
+  <!-- Слой эффектов: конфетти, сердечки, звёздочки -->
+  <div id="effects-root" class="effects-root" aria-hidden="true"></div>
+
+  <!-- Основное приложение -->
+  <div class="app" id="app">
+    <!-- Верхняя панель -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <span class="topbar__label">Birthday Mini App</span>
+      </div>
+
+      <div class="topbar__right">
+        <span id="step-indicator" class="topbar__step">1 / 1</span>
+      </div>
+    </header>
+
+    <!-- Контент -->
+    <main class="app-content" id="app-content">
+      <!-- Intro / Question / Final / Joy Map screen рендерятся сюда из script.js -->
+    </main>
+
+    <!-- Нижняя фиксированная зона кнопок -->
+    <footer class="bottom-bar">
+      <div class="bottom-bar__inner" id="bottom-actions">
+        <!-- Кнопки рендерятся из script.js -->
+      </div>
+    </footer>
+  </div>
+
+  <!-- Шаблон: вступительный экран -->
+  <template id="intro-screen-template">
+    <section class="screen screen--intro">
+      <div class="screen-card hero-card">
+        <div class="screen-badge" data-role="badge"></div>
+
+        <div class="hero-emoji" data-role="emoji"></div>
+
+        <h1 class="screen-title" data-role="title"></h1>
+
+        <p class="screen-text" data-role="text"></p>
+
+        <div class="hero-decor" aria-hidden="true">
+          <span>🤍</span>
+          <span>✨</span>
+          <span>🎀</span>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Шаблон: экран вопроса с вариантами -->
+  <template id="choice-question-template">
+    <section class="screen screen--question">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span class="progress-meta__text" data-role="progress-text"></span>
+          <span class="progress-meta__icon">✨</span>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-bar__fill" data-role="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="screen-card question-card">
+        <div class="screen-badge" data-role="section-badge">Немного о тебе</div>
+
+        <h2 class="question-title" data-role="question-title"></h2>
+
+        <p class="question-subtitle" data-role="question-subtitle"></p>
+
+        <div class="options-list" data-role="options-list">
+          <!-- Кнопки вариантов создаются из script.js -->
+        </div>
+
+        <div class="reaction-box hidden" data-role="reaction-box"></div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Шаблон: экран открытого вопроса -->
+  <template id="text-question-template">
+    <section class="screen screen--question">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span class="progress-meta__text" data-role="progress-text"></span>
+          <span class="progress-meta__icon">💌</span>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-bar__fill" data-role="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="screen-card question-card">
+        <div class="screen-badge" data-role="section-badge">По желанию</div>
+
+        <h2 class="question-title" data-role="question-title"></h2>
+
+        <p class="question-subtitle" data-role="question-subtitle"></p>
+
+        <label class="text-answer-wrap">
+          <textarea
+            class="text-answer-input"
+            data-role="text-answer"
+            rows="6"
+            placeholder="Можешь написать здесь от себя..."
+          ></textarea>
+        </label>
+
+        <div class="question-note" data-role="question-note">
+          Этот вопрос можно пропустить, если не хочется отвечать.
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Шаблон: финальный экран с открыткой -->
+  <template id="final-screen-template">
+    <section class="screen screen--final">
+      <div class="final-header">
+        <div class="screen-badge">готово ✨</div>
+        <div class="hero-emoji">🤍</div>
+        <h1 class="screen-title">Спасибо, Тахмина</h1>
+        <p class="screen-text">
+          Это было не просто анкетой, а маленьким способом узнать тебя чуть ближе.
+        </p>
+      </div>
+
+      <!-- Персональная открытка -->
+      <section class="postcard" id="postcard">
+        <div class="postcard__overlay"></div>
+
+        <div class="postcard__header">
+          <div class="postcard__text-block">
+            <p class="postcard__eyebrow">С днём рождения ✨</p>
+            <h2 class="postcard__title">Тахмина</h2>
+            <p class="postcard__subtitle">
+            </p>
+          </div>
+
+          <div class="postcard__flower" id="postcard-flower">🌷</div>
+        </div>
+
+        <div class="postcard__body postcard__body--simple">
+          <div class="postcard__photo-wrap postcard__photo-wrap--large">
+            <img
+              id="postcard-photo"
+              class="postcard__photo"
+              src="./assets/images/tahmina-photo.jpg"
+              alt="Фото Тахмины"
+            />
+          </div>
+        </div>
+
+        <div class="postcard__message postcard__message--full" id="postcard-message">
+          Здесь будет твоё личное поздравление.
+        </div>
+
+        <div class="postcard__signature" id="postcard-signature">
+          — от [ТВОЁ ИМЯ]
+        </div>
+      </section>
+    </section>
+  </template>
+
+  <!-- Шаблон: отдельный экран "Карта радости" -->
+  <template id="joy-map-screen-template">
+    <section class="screen screen--joy-map">
+      <div class="screen-card results-card">
+        <div class="results-card__header">
+          <div class="screen-badge">твоя карта радости 💗</div>
+          <h2 class="results-title">Твоя карта радости</h2>
+          <p class="screen-text">
+            Всё, что делает тебя счастливее — в одном месте.
+          </p>
+        </div>
+
+        <div class="results-list" id="results-list">
+          <!-- Ответы рендерятся из script.js -->
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <!-- Шаблон: карточка результата -->
+  <template id="result-item-template">
+    <div class="result-item">
+      <span class="result-item__label" data-role="result-label"></span>
+      <div class="result-item__value" data-role="result-value"></div>
+    </div>
+  </template>
+
+  <!-- Шаблон: кнопка варианта -->
+  <template id="option-button-template">
+    <button type="button" class="option-button" data-role="option-button"></button>
+  </template>
+
+  <!-- Шаблон: кнопка действия -->
+  <template id="action-button-template">
+    <button type="button" class="action-button" data-role="action-button"></button>
+  </template>
+
+  <!-- Аудио -->
+  <audio id="audio-click" preload="auto" src="./assets/sounds/click.mp3"></audio>
+  <audio id="audio-option" preload="auto" src="./assets/sounds/option-select.mp3"></audio>
+  <audio id="audio-success" preload="auto" src="./assets/sounds/success.mp3"></audio>
+  <audio id="audio-sparkle" preload="auto" src="./assets/sounds/sparkle.mp3"></audio>
+  <audio
+    id="audio-background"
+    preload="auto"
+    src="./assets/sounds/background-music.mp3"
+    loop
+  ></audio>
+
+  <!-- Скрытые настройки / персонализация -->
+  <script>
+    window.APP_CONFIG = {
+      appTitle: "Что тебя радует?",
+      personName: "Тахмина",
+      authorName: "Александр ( NOSVYAT )",
+      personalMessage: `Тахмина!
+
+От всей души поздравляю тебя с днём рождения! В этот особенный день — 1 апреля — хочется сказать тебе не просто тёплые слова, а по-настоящему искренние и глубокие пожелания.
+
+32 года — это прекрасный возраст, в котором уже есть мудрость, опыт и понимание жизни, но при этом остаётся лёгкость, мечты и стремление к новому. И ты — удивительное тому подтверждение. В тебе сочетаются терпение и сила, доброта и внутренний свет, которые чувствуют все, кто рядом с тобой. Ты умеешь поддержать, понять, выслушать — и это по-настоящему редкий и ценный дар.
+
+Хочу пожелать тебе крепкого здоровья — не только физического, но и душевного. Пусть внутри всегда будет спокойствие, гармония и уверенность в себе. Пусть твои мысли будут лёгкими, сердце — тёплым, а душа — наполненной радостью и смыслом. Ментальное здоровье — это то, что делает жизнь по-настоящему счастливой, и пусть у тебя всегда будет внутренний баланс, силы справляться с любыми трудностями и умение находить свет даже в непростые моменты.
+
+Пусть твоё физическое здоровье будет крепким, энергия — неиссякаемой, а каждый новый день приносит ощущение жизни и радости. Пусть у тебя будет достаточно сил для всего, о чём ты мечтаешь, и даже больше.
+
+Желаю тебе успехов во всём, за что ты берёшься. Пусть твои цели достигаются легко, а возможности приходят вовремя. Пусть рядом будут люди, которые ценят тебя, уважают и искренне радуются твоим успехам. Ты заслуживаешь самого лучшего — и пусть жизнь это обязательно тебе дарит.
+
+Оставайся такой же удивительной, терпеливой, искренней и светлой. Пусть в твоей жизни будет больше счастливых моментов, поводов для улыбки и душевного тепла.
+
+С днём рождения тебя, Тахмина! Пусть этот год принесёт тебе ещё больше счастья, уверенности и красивых событий 💛`,
+      photoPath: "./assets/images/tahmina-photo.jpg"
+    };
+  </script>
+
+  <!-- Данные и логика -->
+  <script src="questions.js"></script>
+<script src="reactions.js"></script>
+<script src="postcard.js"></script>
+<script src="effects.js"></script>
+<script src="sounds.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
