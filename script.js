@@ -1,4 +1,15 @@
 (() => {
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+  tg.ready();
+  tg.expand();
+
+  if (typeof tg.requestFullscreen === "function") {
+    tg.requestFullscreen().catch(() => {});
+  }
+}
+
   const appContent = document.getElementById("app-content");
   const bottomActions = document.getElementById("bottom-actions");
   const stepIndicator = document.getElementById("step-indicator");
