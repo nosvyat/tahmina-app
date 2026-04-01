@@ -313,32 +313,25 @@
     if (isJoyMapStep) {
       const backButton = createActionButton({
         text: "Назад",
-        variant: "secondary",
+        variant: "primary",
         onClick: goPrev
+      });
+
+      const copyButton = createActionButton({
+        text: "Скопировать",
+        variant: "primary",
+        onClick: copyAnswers
       });
 
       const restartButton = createActionButton({
         text: "Пройти заново",
-        variant: "secondary",
+        variant: "primary",
         onClick: restartApp
       });
 
-      const shareButton = createActionButton({
-        text: "Отправить",
-        variant: "secondary",
-        onClick: shareAnswers
-      });
-
-      const downloadButton = createActionButton({
-        text: "Скачать ответы JSON",
-        variant: "primary",
-        onClick: downloadAnswers
-      });
-
       bottomActions.appendChild(backButton);
+      bottomActions.appendChild(copyButton);
       bottomActions.appendChild(restartButton);
-      bottomActions.appendChild(shareButton);
-      bottomActions.appendChild(downloadButton);
       return;
     }
 
@@ -800,57 +793,32 @@
     scrollToTop();
   }
 
-  function downloadAnswers() {
-    const exportData = {
-      meta: {
-        appTitle: appConfig.appTitle,
-        personName: appConfig.personName,
-        authorName: appConfig.authorName,
-        exportedAt: new Date().toISOString()
-      },
-      answers
-    };
-
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: "application/json"
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "tahmina-mini-app-answers.json";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  async function shareAnswers() {
+  async function copyAnswers() {
     const shareText = buildShareText();
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${appConfig.appTitle} — ${appConfig.personName}`,
-          text: shareText
-        });
-        return;
-      } catch (error) {
-        if (error && error.name === "AbortError") {
-          return;
-        }
-      }
-    }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       try {
         await navigator.clipboard.writeText(shareText);
-        showTemporaryWarning("Текст карты радости скопирован ✨");
+        showTemporaryWarning("Ответы скопированы ✨");
         return;
       } catch (error) {}
     }
 
-    showTemporaryWarning("Не удалось открыть отправку на этом устройстве");
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = shareText;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "absolute";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+      showTemporaryWarning("Ответы скопированы ✨");
+      return;
+    } catch (error) {}
+
+    showTemporaryWarning("Не удалось скопировать ответы");
   }
 
   function buildShareText() {
@@ -886,13 +854,13 @@
 })();
 
 document.addEventListener("click", () => {
-    playMusic();
+  playMusic();
 }, { once: true });
 
 document.addEventListener("click", (event) => {
-    const button = event.target.closest("button");
-    if (!button) return;
+  const button = event.target.closest("button");
+  if (!button) return;
 
-    playClick();
-    vibratePhone(20);
+  playClick();
+  vibratePhone(20);
 });
