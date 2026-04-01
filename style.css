@@ -457,11 +457,20 @@ img {
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
-    opacity 0.18s ease;
+    opacity 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .action-button:active {
   transform: scale(0.987);
+}
+
+.action-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.72),
+    0 0 0 8px rgba(140, 122, 243, 0.18);
 }
 
 .action-button--primary {
@@ -472,10 +481,21 @@ img {
   box-shadow: var(--shadow-strong);
 }
 
+.action-button--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(183, 112, 160, 0.28);
+}
+
 .action-button--secondary {
   background: rgba(255, 255, 255, 0.8);
   color: #6d5b6c;
   border: 1px solid rgba(230, 210, 227, 0.95);
+}
+
+.action-button--secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(183, 112, 160, 0.08);
+  border-color: rgba(234, 114, 171, 0.26);
 }
 
 .action-button.is-disabled,
@@ -624,7 +644,6 @@ img {
   align-items: start;
 }
 
-/* новое: упрощённая открытка только с фото */
 .postcard__body--simple {
   display: block;
 }
@@ -892,7 +911,9 @@ img {
       scale(1.15)
       rotate(var(--fx-rotate));
   }
-}.fx-piece--rain {
+}
+
+.fx-piece--rain {
   position: absolute;
   pointer-events: none;
   will-change: transform, opacity;
